@@ -13,7 +13,6 @@
     <div class="hud">
       <div id="hearts"></div>
 
-      <!-- NOVO: HUD DE NÍVEL + BARRA -->
       <div id="levelHUD">
         <div id="levelText">Nível: 1</div>
         <div class="level-bar">
@@ -27,17 +26,25 @@
     <!-- MENU INICIAL -->
     <div id="mainMenu" class="menu">
       <h2>🎄 Jogo Natalino 🎅</h2>
-      <p>Ajude o Papai Noel a derrubar os drones e salvar o Natal!</p>
+      <p>Ajude o Papai Noel a derrubar drones e aviões, sem acertar os passarinhos!</p>
       <div class="menu-controls">
-        <p><b>Controles:</b></p>
+        <p><b>Controles (PC):</b></p>
         <p>⬆ / W = subir &nbsp; | &nbsp; ⬇ / S = descer &nbsp; | &nbsp; Espaço = arremessar presentes</p>
-        <p>Drones tiram vida se encostarem em você. Passarinhos são só enfeite 🐦</p>
+        <p>No celular use os botões da tela. 🖐</p>
+        <p>Drones e aviões dão ponto. Passarinho acertado tira vida.</p>
       </div>
       <button id="btnStart">▶ Iniciar Jogo</button>
     </div>
 
+    <!-- CONTROLES PARA CELULAR -->
+    <div class="mobile-controls">
+      <button id="btnUp">⬆</button>
+      <button id="btnShoot">🎁</button>
+      <button id="btnDown">⬇</button>
+    </div>
+
     <div class="instructions">
-      <p>Após o game over, pressione <b>ENTER</b> para jogar novamente.</p>
+      <p>Após o game over, pressione <b>ENTER</b> (ou reinicie pelo menu) para jogar novamente.</p>
     </div>
   </div>
 

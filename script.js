@@ -4,6 +4,7 @@
 // Papai Noel com 3 frames
 // Presentes com 3 frames
 // Passarinho atingido = consequência negativa (perde vida)
+// AGORA: CONTROLES MOBILE COM BOTÕES
 
 // ======================================================================
 // 🔧 CONFIGURAÇÃO DE IMAGENS
@@ -56,6 +57,11 @@ const menuEl       = document.getElementById("mainMenu");
 const btnStart     = document.getElementById("btnStart");
 const levelTextEl  = document.getElementById("levelText");
 const levelBarFill = document.querySelector(".level-bar-fill");
+
+// Botões mobile
+const btnUp    = document.getElementById("btnUp");
+const btnDown  = document.getElementById("btnDown");
+const btnShoot = document.getElementById("btnShoot");
 
 // ======================================================================
 // 🖼️ CARREGAMENTO DAS IMAGENS
@@ -196,7 +202,7 @@ function drawDrone(drone) {
 }
 
 // ======================================================================
-// ✈️ AVIÕES CAÇA (aparecem a partir do nível 2)
+// ✈️ AVIÕES CAÇA
 // ======================================================================
 const planes = [];
 
@@ -204,11 +210,11 @@ function spawnPlane() {
   const w = 90;
   const h = 55;
   const minY = 50;
-  const maxY = canvas.height - h - 120; // mais pro alto
+  const maxY = canvas.height - h - 120;
   const y = Math.random() * (maxY - minY) + minY;
 
   const speedBase = 6;
-  const speedExtra = GAME.level * 0.5; // mais rápido que o drone
+  const speedExtra = GAME.level * 0.5;
 
   const plane = {
     x: canvas.width + 100,
@@ -344,7 +350,7 @@ function drawGift(g) {
 }
 
 // ======================================================================
-// 🎮 CONTROLES
+// 🎮 CONTROLES (TECLADO + MOBILE)
 // ======================================================================
 const keys = {};
 
@@ -365,6 +371,51 @@ window.addEventListener("keyup", (e) => {
   keys[e.key] = false;
 });
 
+// Função para configurar botões "segurar" (subir/descer)
+function setupHoldButton(button, onPress, onRelease) {
+  if (!button) return;
+
+  const start = (e) => {
+    e.preventDefault();
+    onPress();
+  };
+
+  const end = (e) => {
+    e.preventDefault();
+    onRelease();
+  };
+
+  button.addEventListener("mousedown", start);
+  button.addEventListener("touchstart", start);
+
+  ["mouseup", "mouseleave", "touchend", "touchcancel"].forEach((evt) => {
+    button.addEventListener(evt, end);
+  });
+}
+
+// Liga botões mobile a teclas virtuais
+setupHoldButton(
+  btnUp,
+  () => { keys["ArrowUp"] = true; },
+  () => { keys["ArrowUp"] = false; }
+);
+
+setupHoldButton(
+  btnDown,
+  () => { keys["ArrowDown"] = true; },
+  () => { keys["ArrowDown"] = false; }
+);
+
+if (btnShoot) {
+  const shoot = (e) => {
+    e.preventDefault();
+    shootGift();
+  };
+  btnShoot.addEventListener("mousedown", shoot);
+  btnShoot.addEventListener("touchstart", shoot);
+}
+
+// Botão iniciar
 btnStart.addEventListener("click", () => {
   startGame();
 });
@@ -434,7 +485,6 @@ function nextLevel() {
   GAME.levelDuration = Math.max(15000, GAME.levelDuration - 2000);
   GAME.levelTimeLeft = GAME.levelDuration;
 
-  // Mais inimigos conforme o nível
   GAME.spawnInterval = Math.max(500, GAME.spawnInterval - 150);
   GAME.planeSpawnInterval = Math.max(1200, GAME.planeSpawnInterval - 200);
 }
@@ -535,7 +585,7 @@ function update(delta) {
 
     let giftRemoved = false;
 
-    // Colisão com drones (positivo)
+    // Colisão com drones
     for (let j = drones.length - 1; j >= 0; j--) {
       const d = drones[j];
       if (isColliding(g, d)) {
@@ -551,7 +601,7 @@ function update(delta) {
 
     if (giftRemoved) continue;
 
-    // Colisão com aviões (também positivo)
+    // Colisão com aviões
     for (let j = planes.length - 1; j >= 0; j--) {
       const p = planes[j];
       if (isColliding(g, p)) {
@@ -567,7 +617,7 @@ function update(delta) {
 
     if (giftRemoved) continue;
 
-    // Colisão com passarinhos (NEGATIVO: perde vida)
+    // Colisão com passarinhos (NEGATIVO)
     for (let k = birds.length - 1; k >= 0; k--) {
       const b = birds[k];
       if (isColliding(g, b)) {
@@ -638,7 +688,7 @@ function draw() {
   explosions.forEach((e) => drawExplosion(e));
 
   if (GAME.invincible && Math.floor(currentTimeMs / 100) % 2 === 0) {
-    // pisca (não desenha)
+    // pisca
   } else {
     drawSantaImage();
   }
