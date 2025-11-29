@@ -158,32 +158,35 @@ body {
 
 /* CONTROLES MOBILE – controlados via JS */
 .mobile-controls {
-  margin-top: 12px;
+  margin-top: 16px;
   display: none; /* padrão: escondido */
   justify-content: center;
-  gap: 16px;
+  gap: 24px;
 }
 
+/* Quando estiver no modo mobile, o JS adiciona .show */
 .mobile-controls.show {
   display: flex;
 }
 
+/* Botões GRANDÕES para celular */
 .mobile-controls button {
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
+  width: 96px;
+  height: 96px;
+  border-radius: 999px;
   border: none;
-  font-size: 26px;
+  font-size: 34px;
   font-weight: 700;
-  background: rgba(15, 23, 42, 0.95);
+  background: rgba(15, 23, 42, 0.98);
   color: #f9fafb;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.7);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.85);
   cursor: pointer;
+  touch-action: manipulation;
 }
 
 .mobile-controls button:active {
-  transform: translateY(2px) scale(0.97);
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.7);
+  transform: translateY(3px) scale(0.96);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.8);
 }
 
 /* Responsivo geral */
@@ -199,5 +202,9 @@ body {
   #gameCanvas {
     width: 100%;
     height: auto;
+  }
+
+  .mobile-controls {
+    margin-top: 18px;
   }
 }

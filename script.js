@@ -4,41 +4,35 @@
 // Papai Noel com 3 frames
 // Presentes com 3 frames
 // Passarinho atingido = consequência negativa (perde vida)
-// AGORA: escolha de modo (PC ou Celular) + botões mobile
+// Escolha de modo (PC ou Celular) + botões mobile grandes
+// Agora: alguns drones aparecem bem embaixo para não ter "zona segura"
 
 // ======================================================================
 // 🔧 CONFIGURAÇÃO DE IMAGENS
 // ======================================================================
 const ASSETS = {
-  // Papai Noel com 3 frames
   santa1: "images/santa1.png",
   santa2: "images/santa2.png",
   santa3: "images/santa3.png",
 
-  // Drone com 2 imagens de movimento
   drone1: "images/drone1.png",
   drone2: "images/drone2.png",
 
-  // Avião caça com 2 frames
   plane1: "images/plane1.png",
   plane2: "images/plane2.png",
 
-  // Passarinho com 2 imagens de movimento
   bird1: "images/bird1.png",
   bird2: "images/bird2.png",
 
-  // Explosão com 3 imagens (frames)
   explosion1: "images/explosion1.png",
   explosion2: "images/explosion2.png",
   explosion3: "images/explosion3.png",
 
-  // Presente com 3 frames
   gift1: "images/gift1.png",
   gift2: "images/gift2.png",
   gift3: "images/gift3.png"
 };
 
-// Configuração do tempo de troca dos frames (ms)
 const ANIMATION = {
   santaFrameDuration: 150,
   droneFrameDuration: 120,
@@ -68,43 +62,35 @@ const btnShoot = document.getElementById("btnShoot");
 const mobileControlsEl = document.querySelector(".mobile-controls");
 
 // ======================================================================
-// 🖼️ CARREGAMENTO DAS IMAGENS
+// 🖼️ IMAGENS
 // ======================================================================
-
-// Papai Noel 3 frames
 const santaFrames = [new Image(), new Image(), new Image()];
 santaFrames[0].src = ASSETS.santa1;
 santaFrames[1].src = ASSETS.santa2;
 santaFrames[2].src = ASSETS.santa3;
 
-// Drone 2 frames
 const droneFrames = [new Image(), new Image()];
 droneFrames[0].src = ASSETS.drone1;
 droneFrames[1].src = ASSETS.drone2;
 
-// Avião 2 frames
 const planeFrames = [new Image(), new Image()];
 planeFrames[0].src = ASSETS.plane1;
 planeFrames[1].src = ASSETS.plane2;
 
-// Pássaro 2 frames
 const birdFrames = [new Image(), new Image()];
 birdFrames[0].src = ASSETS.bird1;
 birdFrames[1].src = ASSETS.bird2;
 
-// Explosão 3 frames
 const explosionFrames = [new Image(), new Image(), new Image()];
 explosionFrames[0].src = ASSETS.explosion1;
 explosionFrames[1].src = ASSETS.explosion2;
 explosionFrames[2].src = ASSETS.explosion3;
 
-// Presente 3 frames
 const giftFrames = [new Image(), new Image(), new Image()];
 giftFrames[0].src = ASSETS.gift1;
 giftFrames[1].src = ASSETS.gift2;
 giftFrames[2].src = ASSETS.gift3;
 
-// Tempo global para animação (ms)
 let currentTimeMs = 0;
 
 // ======================================================================
@@ -117,33 +103,29 @@ const GAME = {
   gameOver: false,
   lastTime: 0,
 
-  // drones
   baseSpawnInterval: 1300,
   spawnInterval: 1300,
   lastSpawn: 0,
 
-  // aviões caça
   planeSpawnInterval: 2600,
   lastPlaneSpawn: 0,
 
-  score: 0,                  // inimigos destruídos (drones + aviões)
+  score: 0,
   lives: 3,
   invincible: false,
   invincibleTime: 1000,
   lastHit: 0,
 
-  // passarinhos
   birdSpawnInterval: 2000,
   lastBirdSpawn: 0,
 
-  // níveis
   level: 1,
-  levelDuration: 30000,      // 30s por nível
+  levelDuration: 30000,
   levelTimeLeft: 30000
 };
 
 // ======================================================================
-// 🎅 PAPAI NOEL (3 FRAMES)
+// 🎅 PAPAI NOEL
 // ======================================================================
 const santa = {
   x: 120,
@@ -172,12 +154,24 @@ function drawSantaImage() {
 // ======================================================================
 const drones = [];
 
+// AGORA: parte dos drones aparece bem embaixo (perto da neve)
 function spawnDrone() {
   const w = 70;
   const h = 50;
-  const minY = 40;
-  const maxY = canvas.height - h - 40;
-  const y = Math.random() * (maxY - minY) + minY;
+
+  const altitudeChoice = Math.random();
+  let y;
+
+  if (altitudeChoice < 0.3) {
+    // ~30% dos drones voam bem rente ao chão (perto da neve)
+    // neve está a ~canvas.height - 20, então ajustamos um pouco acima
+    y = canvas.height - h - 25;
+  } else {
+    // altura "normal"
+    const minY = 40;
+    const maxY = canvas.height - h - 80; // evita ficar colado no chão
+    y = Math.random() * (maxY - minY) + minY;
+  }
 
   const speedBase = 4;
   const speedExtra = GAME.level * 0.3;
@@ -319,7 +313,7 @@ function drawExplosion(expl) {
 }
 
 // ======================================================================
-// 🎁 PRESENTES (3 FRAMES)
+// 🎁 PRESENTES
 // ======================================================================
 const gifts = [];
 
@@ -369,7 +363,7 @@ window.addEventListener("keydown", (e) => {
   }
 
   if (e.key === "Enter" && GAME.gameOver) {
-    resetGame(); // recomeça no mesmo modo
+    resetGame();
   }
 });
 
@@ -377,7 +371,6 @@ window.addEventListener("keyup", (e) => {
   keys[e.key] = false;
 });
 
-// Função para configurar botões "segurar" (subir/descer)
 function setupHoldButton(button, onPress, onRelease) {
   if (!button) return;
 
@@ -399,7 +392,7 @@ function setupHoldButton(button, onPress, onRelease) {
   });
 }
 
-// Liga botões mobile a "teclas virtuais"
+// Liga botões mobile às "teclas virtuais"
 setupHoldButton(
   btnUp,
   () => { keys["ArrowUp"] = true; },
@@ -431,7 +424,7 @@ btnMobile.addEventListener("click", () => {
 });
 
 // ======================================================================
-// 📦 COLISÃO
+// COLISÃO
 // ======================================================================
 function isColliding(a, b) {
   return (
@@ -443,12 +436,11 @@ function isColliding(a, b) {
 }
 
 // ======================================================================
-// 🌆 BACKGROUND
+// BACKGROUND
 // ======================================================================
 function drawBackground() {
   ctx.save();
 
-  // Estrelas
   for (let i = 0; i < 40; i++) {
     const x = (i * 50 + Date.now() * 0.02) % canvas.width;
     const y = ((i * 30) % canvas.height) * 0.5;
@@ -456,18 +448,15 @@ function drawBackground() {
     ctx.fillRect(x, y, 2, 2);
   }
 
-  // Horizonte
   ctx.fillStyle = "#020617";
   ctx.fillRect(0, canvas.height - 80, canvas.width, 80);
 
-  // Prédios
   for (let i = 0; i < canvas.width; i += 80) {
     const buildingHeight = 40 + (i % 120);
     ctx.fillStyle = "#020617";
     ctx.fillRect(i, canvas.height - 80 - buildingHeight, 60, buildingHeight);
   }
 
-  // Neve
   ctx.fillStyle = "#e5e7eb";
   ctx.fillRect(0, canvas.height - 20, canvas.width, 20);
 
@@ -475,7 +464,7 @@ function drawBackground() {
 }
 
 // ======================================================================
-// ⏱️ NÍVEIS E BARRA
+// NÍVEIS
 // ======================================================================
 function updateLevel(delta) {
   GAME.levelTimeLeft -= delta;
@@ -500,15 +489,13 @@ function nextLevel() {
 }
 
 // ======================================================================
-// 🔄 ATUALIZAÇÃO DO JOGO
+// UPDATE
 // ======================================================================
 function update(delta) {
   if (!GAME.running) return;
 
-  // Nível / barra
   updateLevel(delta);
 
-  // Movimento Papai Noel
   if (keys["ArrowUp"] || keys["w"] || keys["W"]) {
     santa.y -= santa.speed;
   }
@@ -518,13 +505,11 @@ function update(delta) {
   if (santa.y < 0) santa.y = 0;
   if (santa.y + santa.h > canvas.height) santa.y = canvas.height - santa.h;
 
-  // Spawn drones
   if (Date.now() - GAME.lastSpawn > GAME.spawnInterval) {
     spawnDrone();
     GAME.lastSpawn = Date.now();
   }
 
-  // Spawn aviões caça (somente a partir do nível 2)
   if (
     GAME.level >= 2 &&
     Date.now() - GAME.lastPlaneSpawn > GAME.planeSpawnInterval
@@ -533,13 +518,11 @@ function update(delta) {
     GAME.lastPlaneSpawn = Date.now();
   }
 
-  // Spawn passarinhos
   if (Date.now() - GAME.lastBirdSpawn > GAME.birdSpawnInterval) {
     spawnBird();
     GAME.lastBirdSpawn = Date.now();
   }
 
-  // Drones
   for (let i = drones.length - 1; i >= 0; i--) {
     const d = drones[i];
     d.x -= d.speed;
@@ -556,7 +539,6 @@ function update(delta) {
     }
   }
 
-  // Aviões caça
   for (let i = planes.length - 1; i >= 0; i--) {
     const p = planes[i];
     p.x -= p.speed;
@@ -573,7 +555,6 @@ function update(delta) {
     }
   }
 
-  // Passarinhos
   for (let i = birds.length - 1; i >= 0; i--) {
     const b = birds[i];
     b.x -= b.speed;
@@ -583,7 +564,6 @@ function update(delta) {
     }
   }
 
-  // Presentes
   for (let i = gifts.length - 1; i >= 0; i--) {
     const g = gifts[i];
     g.x += g.speed;
@@ -595,7 +575,6 @@ function update(delta) {
 
     let giftRemoved = false;
 
-    // Colisão com drones
     for (let j = drones.length - 1; j >= 0; j--) {
       const d = drones[j];
       if (isColliding(g, d)) {
@@ -611,7 +590,6 @@ function update(delta) {
 
     if (giftRemoved) continue;
 
-    // Colisão com aviões
     for (let j = planes.length - 1; j >= 0; j--) {
       const p = planes[j];
       if (isColliding(g, p)) {
@@ -627,7 +605,6 @@ function update(delta) {
 
     if (giftRemoved) continue;
 
-    // Colisão com passarinhos (NEGATIVO)
     for (let k = birds.length - 1; k >= 0; k--) {
       const b = birds[k];
       if (isColliding(g, b)) {
@@ -644,7 +621,6 @@ function update(delta) {
     }
   }
 
-  // Explosões
   for (let i = explosions.length - 1; i >= 0; i--) {
     const e = explosions[i];
     if (currentTimeMs - e.startTime > e.duration) {
@@ -652,14 +628,13 @@ function update(delta) {
     }
   }
 
-  // Invencibilidade
   if (GAME.invincible && Date.now() - GAME.lastHit > GAME.invincibleTime) {
     GAME.invincible = false;
   }
 }
 
 // ======================================================================
-// ❤️ VIDA E PONTUAÇÃO
+// VIDA / PONTUAÇÃO
 // ======================================================================
 function takeDamage() {
   GAME.lives -= 1;
@@ -684,7 +659,7 @@ function updateScore() {
 }
 
 // ======================================================================
-// 🖊️ DESENHO
+// DESENHO
 // ======================================================================
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -727,7 +702,7 @@ function draw() {
 }
 
 // ======================================================================
-// 🔁 LOOP PRINCIPAL
+// LOOP
 // ======================================================================
 function gameLoop(timestamp) {
   if (!GAME.lastTime) GAME.lastTime = timestamp;
@@ -745,20 +720,19 @@ function gameLoop(timestamp) {
 }
 
 // ======================================================================
-// ▶ SELECIONAR MODO E INICIAR
+// MODO / RESET
 // ======================================================================
 function selectMode(mode) {
   GAME.mode = mode;
 
   if (mode === "pc") {
-    // Formato mais "wide" para computador
     canvas.width = 900;
     canvas.height = 450;
     mobileControlsEl.classList.remove("show");
   } else {
-    // Formato mais amigável para celular (horizontal)
+    // Modo celular: jogo mais alto na tela
     canvas.width = 720;
-    canvas.height = 400;
+    canvas.height = 520;
     mobileControlsEl.classList.add("show");
   }
 
