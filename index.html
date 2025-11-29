@@ -7,6 +7,7 @@
 </head>
 <body>
   <div class="game-container">
+    <!-- O tamanho real do canvas será ajustado pelo script ao escolher o modo -->
     <canvas id="gameCanvas" width="900" height="450"></canvas>
 
     <!-- HUD por cima do jogo -->
@@ -23,20 +24,31 @@
       <div id="score"></div>
     </div>
 
-    <!-- MENU INICIAL -->
+    <!-- MENU INICIAL: ESCOLHER MODO -->
     <div id="mainMenu" class="menu">
       <h2>🎄 Jogo Natalino 🎅</h2>
-      <p>Ajude o Papai Noel a derrubar drones e aviões, sem acertar os passarinhos!</p>
-      <div class="menu-controls">
-        <p><b>Controles (PC):</b></p>
-        <p>⬆ / W = subir &nbsp; | &nbsp; ⬇ / S = descer &nbsp; | &nbsp; Espaço = arremessar presentes</p>
-        <p>No celular use os botões da tela. 🖐</p>
-        <p>Drones e aviões dão ponto. Passarinho acertado tira vida.</p>
+      <p>Escolha como deseja jogar:</p>
+
+      <div class="menu-mode-buttons">
+        <button id="btnPC">💻 Jogar no Computador</button>
+        <button id="btnMobile">📱 Jogar no Celular</button>
       </div>
-      <button id="btnStart">▶ Iniciar Jogo</button>
+
+      <div class="menu-controls">
+        <p><b>No computador:</b></p>
+        <p>⬆ / W = subir &nbsp; | &nbsp; ⬇ / S = descer &nbsp; | &nbsp; Espaço = arremessar presentes</p>
+
+        <p style="margin-top:8px;"><b>No celular:</b></p>
+        <p>Use os botões na parte de baixo da tela para se mover e atirar. 🖐</p>
+
+        <p style="margin-top:10px;">
+          Drones e aviões dão ponto. Passarinho acertado tira vida.<br/>
+          Sobreviva, avance de nível e salve o Natal!
+        </p>
+      </div>
     </div>
 
-    <!-- CONTROLES PARA CELULAR -->
+    <!-- CONTROLES PARA CELULAR (aparecem só no modo mobile) -->
     <div class="mobile-controls">
       <button id="btnUp">⬆</button>
       <button id="btnShoot">🎁</button>
@@ -44,7 +56,7 @@
     </div>
 
     <div class="instructions">
-      <p>Após o game over, pressione <b>ENTER</b> (ou reinicie pelo menu) para jogar novamente.</p>
+      <p>Após o game over, pressione <b>ENTER</b> para recomeçar no mesmo modo.</p>
     </div>
   </div>
 

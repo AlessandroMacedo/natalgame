@@ -4,7 +4,7 @@
 // Papai Noel com 3 frames
 // Presentes com 3 frames
 // Passarinho atingido = consequência negativa (perde vida)
-// AGORA: CONTROLES MOBILE COM BOTÕES
+// AGORA: escolha de modo (PC ou Celular) + botões mobile
 
 // ======================================================================
 // 🔧 CONFIGURAÇÃO DE IMAGENS
@@ -54,14 +54,18 @@ const ctx = canvas.getContext("2d");
 const heartsEl     = document.getElementById("hearts");
 const scoreEl      = document.getElementById("score");
 const menuEl       = document.getElementById("mainMenu");
-const btnStart     = document.getElementById("btnStart");
 const levelTextEl  = document.getElementById("levelText");
 const levelBarFill = document.querySelector(".level-bar-fill");
+
+// Botões de modo
+const btnPC     = document.getElementById("btnPC");
+const btnMobile = document.getElementById("btnMobile");
 
 // Botões mobile
 const btnUp    = document.getElementById("btnUp");
 const btnDown  = document.getElementById("btnDown");
 const btnShoot = document.getElementById("btnShoot");
+const mobileControlsEl = document.querySelector(".mobile-controls");
 
 // ======================================================================
 // 🖼️ CARREGAMENTO DAS IMAGENS
@@ -107,6 +111,8 @@ let currentTimeMs = 0;
 // ⚙️ ESTADO DO JOGO
 // ======================================================================
 const GAME = {
+  mode: null, // "pc" ou "mobile"
+
   running: false,
   gameOver: false,
   lastTime: 0,
@@ -363,7 +369,7 @@ window.addEventListener("keydown", (e) => {
   }
 
   if (e.key === "Enter" && GAME.gameOver) {
-    resetGame();
+    resetGame(); // recomeça no mesmo modo
   }
 });
 
@@ -393,7 +399,7 @@ function setupHoldButton(button, onPress, onRelease) {
   });
 }
 
-// Liga botões mobile a teclas virtuais
+// Liga botões mobile a "teclas virtuais"
 setupHoldButton(
   btnUp,
   () => { keys["ArrowUp"] = true; },
@@ -415,9 +421,13 @@ if (btnShoot) {
   btnShoot.addEventListener("touchstart", shoot);
 }
 
-// Botão iniciar
-btnStart.addEventListener("click", () => {
-  startGame();
+// Botões de modo (menu inicial)
+btnPC.addEventListener("click", () => {
+  selectMode("pc");
+});
+
+btnMobile.addEventListener("click", () => {
+  selectMode("mobile");
 });
 
 // ======================================================================
@@ -735,9 +745,23 @@ function gameLoop(timestamp) {
 }
 
 // ======================================================================
-// ▶ INICIAR / ♻ REINICIAR
+// ▶ SELECIONAR MODO E INICIAR
 // ======================================================================
-function startGame() {
+function selectMode(mode) {
+  GAME.mode = mode;
+
+  if (mode === "pc") {
+    // Formato mais "wide" para computador
+    canvas.width = 900;
+    canvas.height = 450;
+    mobileControlsEl.classList.remove("show");
+  } else {
+    // Formato mais amigável para celular (horizontal)
+    canvas.width = 720;
+    canvas.height = 400;
+    mobileControlsEl.classList.add("show");
+  }
+
   resetGame();
   menuEl.classList.add("hidden");
 }
@@ -749,7 +773,9 @@ function resetGame() {
   GAME.lives = 3;
   GAME.invincible = false;
   GAME.lastHit = 0;
-  santa.y = canvas.height / 2;
+
+  santa.x = 120;
+  santa.y = canvas.height / 2 - santa.h / 2;
 
   drones.length = 0;
   planes.length = 0;
@@ -768,6 +794,8 @@ function resetGame() {
   updateScore();
   levelBarFill.style.width = "100%";
   levelTextEl.textContent = "Nível: " + GAME.level;
+  GAME.lastTime = 0;
+  currentTimeMs = 0;
 }
 
 // Inicialização
