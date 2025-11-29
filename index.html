@@ -50,23 +50,21 @@
       </div>
     </div>
 
-    <!-- CONTROLES PARA CELULAR (aparecem só no modo mobile) -->
+        <!-- CONTROLES PARA CELULAR (laterais, só no modo mobile) -->
     <div class="mobile-controls">
-      <!-- Botão de presente à ESQUERDA -->
-      <button id="btnShoot" class="btn-shoot">🎁</button>
+      <div class="mobile-side mobile-left">
+        <!-- Atirar -->
+        <button id="btnShoot" class="mobile-btn big-primary">🎁</button>
+        <!-- Reiniciar (só aparece no game over via JS) -->
+        <button id="btnRestartMobile" class="mobile-btn big-secondary">⟳</button>
+      </div>
 
-      <!-- Botões de movimento à DIREITA (um em cima do outro) -->
-      <div class="mobile-move-group">
-        <button id="btnUp" class="btn-move">⬆</button>
-        <button id="btnDown" class="btn-move">⬇</button>
+      <div class="mobile-side mobile-right">
+        <button id="btnUp" class="mobile-btn big-primary">▲</button>
+        <button id="btnDown" class="mobile-btn big-primary">▼</button>
       </div>
     </div>
 
-    <!-- Botão de reiniciar (só aparece no modo celular) -->
-    <button id="btnRestartMobile" class="mobile-restart">
-      ⟳ REINICIAR
-    </button>
-  </div>
 
   <script src="script.js"></script>
 </body>

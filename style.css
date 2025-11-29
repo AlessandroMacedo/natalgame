@@ -160,99 +160,92 @@ body {
   opacity: 0.8;
 }
 
-/* CONTROLES MOBILE – controlados via JS */
+/* ================= MOBILE CONTROLS LATERAIS ================= */
+
+.game-container {
+  position: relative;
+}
+
+/* Controles aparecem por cima do jogo, colados nas laterais */
 .mobile-controls {
-  margin-top: 16px;
-  display: none; /* padrão: escondido; JS coloca .show no modo mobile */
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  max-width: 600px;
+  position: absolute;
+  inset: 0;
+  display: none;           /* JS coloca .show no modo mobile */
+  pointer-events: none;    /* deixa o canvas clicável; botões habilitam de volta */
 }
 
-/* Quando estiver no modo mobile, o JS adiciona .show */
+/* Mostra quando for modo mobile */
 .mobile-controls.show {
-  display: flex;
+  display: block;
 }
 
-/* Grupo de movimento (direita) */
-.mobile-move-group {
+/* Colunas da esquerda e direita */
+.mobile-side {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
+  pointer-events: auto; /* volta o click pros botões */
 }
 
-/* Botão de presente (esquerda) e botões de movimento (direita) */
-.mobile-controls button {
+/* levemente “pra fora” da área do canvas */
+.mobile-left {
+  left: -4px;
+}
+
+.mobile-right {
+  right: -4px;
+}
+
+/* Botões menores + transparentes + só ícones */
+.mobile-btn {
+  min-width: 120px;
+  min-height: 60px;
+  padding: 12px 18px;
   border-radius: 999px;
-  border: none;
+  border: 2px solid #ffffff;
+  font-size: 22px;
   font-weight: 700;
-  background: rgba(15, 23, 42, 0.98);
-  color: #f9fafb;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.85);
+  background: rgba(15, 23, 42, 0.08); /* bem transparente */
+  color: #ffffff;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.6);
   cursor: pointer;
   touch-action: manipulation;
+  text-shadow: 0 0 4px rgba(0, 0, 0, 0.9);
 }
 
-/* Botão de presente: BEM grande à esquerda */
-.btn-shoot {
-  width: 120px;
-  height: 120px;
-  font-size: 42px;
+/* classes separadas se quiser diferenciar depois */
+.big-primary { }
+.big-secondary { }
+
+/* Reiniciar começa escondido; o JS vai dar display inline-flex no game over */
+#btnRestartMobile {
+  display: none;
 }
 
-/* Botões de movimento: grandes, um em cima do outro à direita */
-.btn-move {
-  width: 96px;
-  height: 96px;
-  font-size: 34px;
-}
-
-.mobile-controls button:active {
-  transform: translateY(3px) scale(0.96);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.8);
-}
-
-/* Botão de reiniciar no celular – MAIOR */
-.mobile-restart {
-  margin-top: 14px;
-  padding: 14px 30px;
-  border-radius: 999px;
-  border: none;
-  font-size: 18px;
-  font-weight: 700;
-  background: rgba(15, 23, 42, 0.98);
-  color: #f9fafb;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.85);
-  cursor: pointer;
-  display: none; /* padrão: escondido; JS adiciona .show no modo mobile */
-}
-
-.mobile-restart.show {
-  display: inline-block;
-}
-
-.mobile-restart:active {
+.mobile-btn:active {
   transform: translateY(2px) scale(0.98);
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.8);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.85);
 }
 
-/* Responsivo geral */
+/* ================= RESPONSIVO ================= */
 @media (max-width: 768px) {
   body {
     padding: 10px;
   }
 
-  .menu {
-    padding: 10px;
+  .game-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 
   #gameCanvas {
     width: 100%;
     height: auto;
-  }
-
-  .mobile-controls {
-    margin-top: 18px;
+    max-width: 900px;
   }
 }

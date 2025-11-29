@@ -1,11 +1,6 @@
 // JOGO NATALINO - PAPAI NOEL VS DRONES
-// Drones + Aviões Caça + Passarinhos animados
-// Explosão com 3 frames
-// Papai Noel com 3 frames
-// Presentes com 3 frames
-// Passarinho atingido = consequência negativa (perde vida)
-// Escolha de modo (PC ou Celular) + botões mobile grandes
-// Alguns drones aparecem bem embaixo + botão de REINICIAR no celular
+// PC + Celular (controles laterais)
+// Drones, aviões, passarinhos, explosões, níveis, etc.
 
 // ======================================================================
 // 🔧 CONFIGURAÇÃO DE IMAGENS
@@ -60,14 +55,12 @@ const btnUp    = document.getElementById("btnUp");
 const btnDown  = document.getElementById("btnDown");
 const btnShoot = document.getElementById("btnShoot");
 const mobileControlsEl = document.querySelector(".mobile-controls");
-
-// Botão de reiniciar no celular
 const mobileRestartBtn = document.getElementById("btnRestartMobile");
 
 let currentTimeMs = 0;
 
 // ======================================================================
-// 🖼️ IMAGENS
+// IMAGENS
 // ======================================================================
 const santaFrames = [new Image(), new Image(), new Image()];
 santaFrames[0].src = ASSETS.santa1;
@@ -97,7 +90,7 @@ giftFrames[1].src = ASSETS.gift2;
 giftFrames[2].src = ASSETS.gift3;
 
 // ======================================================================
-// ⚙️ ESTADO DO JOGO
+// ESTADO DO JOGO
 // ======================================================================
 const GAME = {
   mode: null, // "pc" ou "mobile"
@@ -128,7 +121,7 @@ const GAME = {
 };
 
 // ======================================================================
-// 🎅 PAPAI NOEL
+// PAPAI NOEL
 // ======================================================================
 const santa = {
   x: 120,
@@ -153,11 +146,10 @@ function drawSantaImage() {
 }
 
 // ======================================================================
-// 🤖 DRONES
+// DRONES
 // ======================================================================
 const drones = [];
 
-// Parte dos drones aparece bem embaixo (perto da neve)
 function spawnDrone() {
   const w = 70;
   const h = 50;
@@ -166,10 +158,9 @@ function spawnDrone() {
   let y;
 
   if (altitudeChoice < 0.3) {
-    // ~30% dos drones voam bem rente ao chão (perto da neve)
+    // parte dos drones bem embaixo (perto dos prédios)
     y = canvas.height - h - 25;
   } else {
-    // altura "normal"
     const minY = 40;
     const maxY = canvas.height - h - 80;
     y = Math.random() * (maxY - minY) + minY;
@@ -178,15 +169,13 @@ function spawnDrone() {
   const speedBase = 4;
   const speedExtra = GAME.level * 0.3;
 
-  const drone = {
+  drones.push({
     x: canvas.width + 80,
     y,
     w,
     h,
     speed: speedBase + Math.random() * 2 + speedExtra
-  };
-
-  drones.push(drone);
+  });
 }
 
 function drawDrone(drone) {
@@ -204,7 +193,7 @@ function drawDrone(drone) {
 }
 
 // ======================================================================
-// ✈️ AVIÕES CAÇA
+// AVIÕES CAÇA
 // ======================================================================
 const planes = [];
 
@@ -218,15 +207,13 @@ function spawnPlane() {
   const speedBase = 6;
   const speedExtra = GAME.level * 0.5;
 
-  const plane = {
+  planes.push({
     x: canvas.width + 100,
     y,
     w,
     h,
     speed: speedBase + Math.random() * 2 + speedExtra
-  };
-
-  planes.push(plane);
+  });
 }
 
 function drawPlane(plane) {
@@ -244,7 +231,7 @@ function drawPlane(plane) {
 }
 
 // ======================================================================
-// 🐦 PASSARINHOS
+// PASSARINHOS
 // ======================================================================
 const birds = [];
 
@@ -255,15 +242,13 @@ function spawnBird() {
   const maxY = canvas.height / 2;
   const y = Math.random() * (maxY - minY) + minY;
 
-  const bird = {
+  birds.push({
     x: canvas.width + 20,
     y,
     w,
     h,
     speed: 2 + Math.random() * 1.5
-  };
-
-  birds.push(bird);
+  });
 }
 
 function drawBird(bird) {
@@ -281,7 +266,7 @@ function drawBird(bird) {
 }
 
 // ======================================================================
-// 💥 EXPLOSÕES
+// EXPLOSÕES
 // ======================================================================
 const explosions = [];
 
@@ -298,7 +283,6 @@ function spawnExplosion(x, y, w, h) {
 
 function drawExplosion(expl) {
   const elapsed = currentTimeMs - expl.startTime;
-
   const index =
     Math.floor(elapsed / ANIMATION.explosionFrameDuration) % explosionFrames.length;
   const img = explosionFrames[index];
@@ -315,7 +299,7 @@ function drawExplosion(expl) {
 }
 
 // ======================================================================
-// 🎁 PRESENTES
+// PRESENTES
 // ======================================================================
 const gifts = [];
 
@@ -323,14 +307,13 @@ function shootGift() {
   if (!GAME.running || GAME.gameOver) return;
   if (gifts.length > 10) return;
 
-  const gift = {
+  gifts.push({
     x: santa.x + santa.w,
     y: santa.y + santa.h * 0.5 - 6,
     w: 24,
     h: 24,
     speed: 9
-  };
-  gifts.push(gift);
+  });
 }
 
 function drawGift(g) {
@@ -341,7 +324,6 @@ function drawGift(g) {
   if (!img.complete || img.naturalWidth === 0) {
     ctx.fillStyle = "#22c55e";
     ctx.fillRect(g.x, g.y, g.w, g.h);
-
     ctx.fillStyle = "#ef4444";
     ctx.fillRect(g.x + g.w * 0.4, g.y, g.w * 0.2, g.h);
     ctx.fillRect(g.x, g.y + g.h * 0.4, g.w, g.h * 0.2);
@@ -352,7 +334,7 @@ function drawGift(g) {
 }
 
 // ======================================================================
-// 🎮 CONTROLES (TECLADO + MOBILE)
+// CONTROLES (TECLADO + MOBILE)
 // ======================================================================
 const keys = {};
 
@@ -416,7 +398,7 @@ if (btnShoot) {
   btnShoot.addEventListener("touchstart", shoot);
 }
 
-// Botões de modo (menu inicial)
+// Botões de modo (menu)
 btnPC.addEventListener("click", () => {
   selectMode("pc");
 });
@@ -425,12 +407,27 @@ btnMobile.addEventListener("click", () => {
   selectMode("mobile");
 });
 
-// Botão de reiniciar no celular
+// Botão de reiniciar no mobile (aparece só no game over)
 if (mobileRestartBtn) {
   mobileRestartBtn.addEventListener("click", (e) => {
     e.preventDefault();
     resetGame();
   });
+}
+
+// ======================================================================
+// FUNÇÕES AUXILIARES DO BOTÃO REINICIAR MOBILE
+// ======================================================================
+function showMobileRestart() {
+  if (GAME.mode === "mobile" && mobileRestartBtn) {
+    mobileRestartBtn.style.display = "inline-flex";
+  }
+}
+
+function hideMobileRestart() {
+  if (mobileRestartBtn) {
+    mobileRestartBtn.style.display = "none";
+  }
 }
 
 // ======================================================================
@@ -506,6 +503,7 @@ function update(delta) {
 
   updateLevel(delta);
 
+  // movimento do Papai Noel
   if (keys["ArrowUp"] || keys["w"] || keys["W"]) {
     santa.y -= santa.speed;
   }
@@ -515,6 +513,7 @@ function update(delta) {
   if (santa.y < 0) santa.y = 0;
   if (santa.y + santa.h > canvas.height) santa.y = canvas.height - santa.h;
 
+  // spawns
   if (Date.now() - GAME.lastSpawn > GAME.spawnInterval) {
     spawnDrone();
     GAME.lastSpawn = Date.now();
@@ -533,6 +532,7 @@ function update(delta) {
     GAME.lastBirdSpawn = Date.now();
   }
 
+  // drones
   for (let i = drones.length - 1; i >= 0; i--) {
     const d = drones[i];
     d.x -= d.speed;
@@ -549,6 +549,7 @@ function update(delta) {
     }
   }
 
+  // aviões
   for (let i = planes.length - 1; i >= 0; i--) {
     const p = planes[i];
     p.x -= p.speed;
@@ -565,6 +566,7 @@ function update(delta) {
     }
   }
 
+  // passarinhos
   for (let i = birds.length - 1; i >= 0; i--) {
     const b = birds[i];
     b.x -= b.speed;
@@ -574,6 +576,7 @@ function update(delta) {
     }
   }
 
+  // presentes
   for (let i = gifts.length - 1; i >= 0; i--) {
     const g = gifts[i];
     g.x += g.speed;
@@ -585,6 +588,7 @@ function update(delta) {
 
     let giftRemoved = false;
 
+    // drones
     for (let j = drones.length - 1; j >= 0; j--) {
       const d = drones[j];
       if (isColliding(g, d)) {
@@ -600,6 +604,7 @@ function update(delta) {
 
     if (giftRemoved) continue;
 
+    // aviões
     for (let j = planes.length - 1; j >= 0; j--) {
       const p = planes[j];
       if (isColliding(g, p)) {
@@ -615,6 +620,7 @@ function update(delta) {
 
     if (giftRemoved) continue;
 
+    // passarinhos (erro = perde vida)
     for (let k = birds.length - 1; k >= 0; k--) {
       const b = birds[k];
       if (isColliding(g, b)) {
@@ -631,6 +637,7 @@ function update(delta) {
     }
   }
 
+  // explosões
   for (let i = explosions.length - 1; i >= 0; i--) {
     const e = explosions[i];
     if (currentTimeMs - e.startTime > e.duration) {
@@ -656,6 +663,7 @@ function takeDamage() {
     GAME.lives = 0;
     GAME.running = false;
     GAME.gameOver = true;
+    showMobileRestart(); // aparece só no game over (mobile)
   }
 }
 
@@ -704,7 +712,7 @@ function draw() {
       canvas.height / 2 + 20
     );
     ctx.fillText(
-      "Pressione ENTER para jogar novamente",
+      "Pressione ENTER ou toque em ⟳",
       canvas.width / 2,
       canvas.height / 2 + 60
     );
@@ -739,15 +747,14 @@ function selectMode(mode) {
     canvas.width = 900;
     canvas.height = 450;
     mobileControlsEl.classList.remove("show");
-    mobileRestartBtn.classList.remove("show");
   } else {
-    // Modo celular: jogo mais alto na tela
-    canvas.width = 720;
-    canvas.height = 520;
+    // modo celular: mesma resolução, mas responsivo no CSS e com controles laterais
+    canvas.width = 900;
+    canvas.height = 450;
     mobileControlsEl.classList.add("show");
-    mobileRestartBtn.classList.add("show");
   }
 
+  hideMobileRestart();  // sempre começa sem botão de restart
   resetGame();
   menuEl.classList.add("hidden");
 }
@@ -759,6 +766,8 @@ function resetGame() {
   GAME.lives = 3;
   GAME.invincible = false;
   GAME.lastHit = 0;
+
+  hideMobileRestart();
 
   santa.x = 120;
   santa.y = canvas.height / 2 - santa.h / 2;
