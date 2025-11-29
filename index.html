@@ -7,15 +7,12 @@
 </head>
 <body>
   <div class="game-container">
-    <!-- O tamanho real do canvas será ajustado pelo script ao escolher o modo -->
-    <canvas id="gameCanvas" width="900" height="450"></canvas>
-
-    <!-- HUD por cima do jogo -->
+    <!-- HUD (vidas, nível, barra, pontuação) -->
     <div class="hud">
       <div id="hearts"></div>
 
       <div id="levelHUD">
-        <div id="levelText">Nível: 1</div>
+        <div id="levelText"></div>
         <div class="level-bar">
           <div class="level-bar-fill"></div>
         </div>
@@ -24,40 +21,51 @@
       <div id="score"></div>
     </div>
 
-    <!-- MENU INICIAL: ESCOLHER MODO -->
-    <div id="mainMenu" class="menu">
-      <h2>🎄 NATAL INNOVA 🎅</h2>
-      <p>Escolha como deseja jogar:</p>
+    <!-- Canvas do jogo -->
+    <canvas id="gameCanvas" width="900" height="450"></canvas>
 
-      <div class="menu-mode-buttons">
-        <button id="btnPC">💻 Jogar no Computador</button>
-        <button id="btnMobile">📱 Jogar no Celular</button>
-      </div>
+    <!-- MENU INICIAL -->
+    <div id="mainMenu" class="menu">
+      <h2>Papai Noel Sobrevoando a Cidade</h2>
+      <p>
+        Ajude o Papai Noel a desviar dos drones, aviões e passarinhos,
+        arremessando presentes para proteger o Natal!
+      </p>
 
       <div class="menu-controls">
-        <p><b>No computador:</b></p>
-        <p>⬆ / W = subir &nbsp; | &nbsp; ⬇ / S = descer &nbsp; | &nbsp; Espaço = arremessar presentes</p>
-
-        <p style="margin-top:8px;"><b>No celular:</b></p>
-        <p>Use os botões na parte de baixo da tela para se mover e atirar. 🖐</p>
-
-        <p style="margin-top:10px;">
-          Drones e aviões dão ponto. Passarinho acertado tira vida.<br/>
-          Sobreviva, avance de nível e salve o Natal!
+        <p><strong>Escolha como você quer jogar:</strong></p>
+        <div class="menu-mode-buttons">
+          <button id="btnPC">🖥️ Jogar no Computador</button>
+          <button id="btnMobile">📱 Jogar no Celular</button>
+        </div>
+        <p class="small-hint">
+          Computador: setas ↑ / ↓ para mover, espaço para atirar. <br />
+          Celular: use os botões grandes na tela.
         </p>
+      </div>
+
+      <div class="instructions">
+        Acerta drones e aviões para ganhar pontos, mas cuidado com os
+        passarinhos — se acertar, você perde vida!
       </div>
     </div>
 
     <!-- CONTROLES PARA CELULAR (aparecem só no modo mobile) -->
     <div class="mobile-controls">
-      <button id="btnUp">⬆</button>
-      <button id="btnShoot">🎁</button>
-      <button id="btnDown">⬇</button>
+      <!-- Botão de presente à ESQUERDA -->
+      <button id="btnShoot" class="btn-shoot">🎁</button>
+
+      <!-- Botões de movimento à DIREITA (um em cima do outro) -->
+      <div class="mobile-move-group">
+        <button id="btnUp" class="btn-move">⬆</button>
+        <button id="btnDown" class="btn-move">⬇</button>
+      </div>
     </div>
 
-    <div class="instructions">
-      <p>Após o game over, pressione <b>ENTER</b> para recomeçar no mesmo modo.</p>
-    </div>
+    <!-- Botão de reiniciar (só aparece no modo celular) -->
+    <button id="btnRestartMobile" class="mobile-restart">
+      ⟳ REINICIAR
+    </button>
   </div>
 
   <script src="script.js"></script>

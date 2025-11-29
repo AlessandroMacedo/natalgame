@@ -145,11 +145,15 @@ body {
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.7);
 }
 
+.small-hint {
+  font-size: 12px;
+  opacity: 0.85;
+}
+
 .hidden {
   display: none;
 }
 
-/* Texto embaixo */
 .instructions {
   margin-top: 10px;
   font-size: 13px;
@@ -159,9 +163,11 @@ body {
 /* CONTROLES MOBILE – controlados via JS */
 .mobile-controls {
   margin-top: 16px;
-  display: none; /* padrão: escondido */
-  justify-content: center;
-  gap: 24px;
+  display: none; /* padrão: escondido; JS coloca .show no modo mobile */
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 600px;
 }
 
 /* Quando estiver no modo mobile, o JS adiciona .show */
@@ -169,13 +175,17 @@ body {
   display: flex;
 }
 
-/* Botões GRANDÕES para celular */
+/* Grupo de movimento (direita) */
+.mobile-move-group {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Botão de presente (esquerda) e botões de movimento (direita) */
 .mobile-controls button {
-  width: 96px;
-  height: 96px;
   border-radius: 999px;
   border: none;
-  font-size: 34px;
   font-weight: 700;
   background: rgba(15, 23, 42, 0.98);
   color: #f9fafb;
@@ -184,9 +194,47 @@ body {
   touch-action: manipulation;
 }
 
+/* Botão de presente: BEM grande à esquerda */
+.btn-shoot {
+  width: 120px;
+  height: 120px;
+  font-size: 42px;
+}
+
+/* Botões de movimento: grandes, um em cima do outro à direita */
+.btn-move {
+  width: 96px;
+  height: 96px;
+  font-size: 34px;
+}
+
 .mobile-controls button:active {
   transform: translateY(3px) scale(0.96);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.8);
+}
+
+/* Botão de reiniciar no celular – MAIOR */
+.mobile-restart {
+  margin-top: 14px;
+  padding: 14px 30px;
+  border-radius: 999px;
+  border: none;
+  font-size: 18px;
+  font-weight: 700;
+  background: rgba(15, 23, 42, 0.98);
+  color: #f9fafb;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.85);
+  cursor: pointer;
+  display: none; /* padrão: escondido; JS adiciona .show no modo mobile */
+}
+
+.mobile-restart.show {
+  display: inline-block;
+}
+
+.mobile-restart:active {
+  transform: translateY(2px) scale(0.98);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.8);
 }
 
 /* Responsivo geral */

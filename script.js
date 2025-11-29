@@ -5,7 +5,7 @@
 // Presentes com 3 frames
 // Passarinho atingido = consequência negativa (perde vida)
 // Escolha de modo (PC ou Celular) + botões mobile grandes
-// Agora: alguns drones aparecem bem embaixo para não ter "zona segura"
+// Alguns drones aparecem bem embaixo + botão de REINICIAR no celular
 
 // ======================================================================
 // 🔧 CONFIGURAÇÃO DE IMAGENS
@@ -61,6 +61,11 @@ const btnDown  = document.getElementById("btnDown");
 const btnShoot = document.getElementById("btnShoot");
 const mobileControlsEl = document.querySelector(".mobile-controls");
 
+// Botão de reiniciar no celular
+const mobileRestartBtn = document.getElementById("btnRestartMobile");
+
+let currentTimeMs = 0;
+
 // ======================================================================
 // 🖼️ IMAGENS
 // ======================================================================
@@ -90,8 +95,6 @@ const giftFrames = [new Image(), new Image(), new Image()];
 giftFrames[0].src = ASSETS.gift1;
 giftFrames[1].src = ASSETS.gift2;
 giftFrames[2].src = ASSETS.gift3;
-
-let currentTimeMs = 0;
 
 // ======================================================================
 // ⚙️ ESTADO DO JOGO
@@ -154,7 +157,7 @@ function drawSantaImage() {
 // ======================================================================
 const drones = [];
 
-// AGORA: parte dos drones aparece bem embaixo (perto da neve)
+// Parte dos drones aparece bem embaixo (perto da neve)
 function spawnDrone() {
   const w = 70;
   const h = 50;
@@ -164,12 +167,11 @@ function spawnDrone() {
 
   if (altitudeChoice < 0.3) {
     // ~30% dos drones voam bem rente ao chão (perto da neve)
-    // neve está a ~canvas.height - 20, então ajustamos um pouco acima
     y = canvas.height - h - 25;
   } else {
     // altura "normal"
     const minY = 40;
-    const maxY = canvas.height - h - 80; // evita ficar colado no chão
+    const maxY = canvas.height - h - 80;
     y = Math.random() * (maxY - minY) + minY;
   }
 
@@ -422,6 +424,14 @@ btnPC.addEventListener("click", () => {
 btnMobile.addEventListener("click", () => {
   selectMode("mobile");
 });
+
+// Botão de reiniciar no celular
+if (mobileRestartBtn) {
+  mobileRestartBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    resetGame();
+  });
+}
 
 // ======================================================================
 // COLISÃO
@@ -729,11 +739,13 @@ function selectMode(mode) {
     canvas.width = 900;
     canvas.height = 450;
     mobileControlsEl.classList.remove("show");
+    mobileRestartBtn.classList.remove("show");
   } else {
     // Modo celular: jogo mais alto na tela
     canvas.width = 720;
     canvas.height = 520;
     mobileControlsEl.classList.add("show");
+    mobileRestartBtn.classList.add("show");
   }
 
   resetGame();
