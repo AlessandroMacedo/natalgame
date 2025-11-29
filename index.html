@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <title>Jogo Natalino - Papai Noel</title>
+  <title>Natal Innova</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -26,7 +26,7 @@
 
     <!-- MENU INICIAL -->
     <div id="mainMenu" class="menu">
-      <h2>Papai Noel Sobrevoando a Cidade</h2>
+      <h2>Natal Innova</h2>
       <p>
         Ajude o Papai Noel a desviar dos drones, aviões e passarinhos,
         arremessando presentes para proteger o Natal!
@@ -40,17 +40,17 @@
         </div>
         <p class="small-hint">
           Computador: setas ↑ / ↓ para mover, espaço para atirar. <br />
-          Celular: use os botões grandes na tela.
+          Celular: use os botões laterais na tela.
         </p>
       </div>
 
       <div class="instructions">
-        Acerta drones e aviões para ganhar pontos, mas cuidado com os
+        Acerte drones e aviões para ganhar pontos, mas cuidado com os
         passarinhos — se acertar, você perde vida!
       </div>
     </div>
 
-        <!-- CONTROLES PARA CELULAR (laterais, só no modo mobile) -->
+    <!-- CONTROLES PARA CELULAR (laterais, só no modo mobile) -->
     <div class="mobile-controls">
       <div class="mobile-side mobile-left">
         <!-- Atirar -->
@@ -65,6 +65,28 @@
       </div>
     </div>
 
+    <!-- AVISO ESPECIAL PARA CELULAR (GIF + OK) -->
+    <div id="mobileOrientationModal" class="orientation-modal hidden">
+      <div class="orientation-modal-content">
+        <h3>Melhor experiência no celular</h3>
+        <p>
+          Para jogar o <strong>Natal Innova</strong> no celular,
+          vire o aparelho para a <strong>horizontal (paisagem)</strong>.
+        </p>
+
+        <!-- Coloque aqui o seu GIF de girar o celular -->
+        <img
+          src="images/rotate.gif"
+          alt="Gire o celular para a horizontal"
+          class="orientation-gif"
+        />
+
+        <button id="btnOrientationOk" class="orientation-ok-btn">
+          OK
+        </button>
+      </div>
+    </div>
+  </div>
 
   <script src="script.js"></script>
 </body>

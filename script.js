@@ -37,6 +37,33 @@ const ANIMATION = {
   giftFrameDuration: 90
 };
 
+// ======================================================================
+// 🎵 MÚSICA DE FUNDO
+// ======================================================================
+const bgMusic = new Audio("audio/natal_innova_theme.mp3");
+bgMusic.loop = true;
+bgMusic.volume = 0.4; // ajuste de volume (0.0 a 1.0)
+let musicStarted = false;
+
+function playBackgroundMusic() {
+  if (musicStarted) return; // só inicia uma vez a partir do menu
+  musicStarted = true;
+  bgMusic.currentTime = 0;
+  bgMusic.play().catch((err) => {
+    console.log("Reprodução da música foi bloqueada pelo navegador:", err);
+  });
+}
+
+function resumeBackgroundMusic() {
+  if (!musicStarted) return;
+  bgMusic.currentTime = 0;
+  bgMusic.play().catch((err) => {
+    console.log("Não foi possível retomar a música:", err);
+  });
+}
+
+// ======================================================================
+
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
@@ -45,6 +72,10 @@ const scoreEl      = document.getElementById("score");
 const menuEl       = document.getElementById("mainMenu");
 const levelTextEl  = document.getElementById("levelText");
 const levelBarFill = document.querySelector(".level-bar-fill");
+
+// Modal de orientação mobile
+const mobileOrientationModal = document.getElementById("mobileOrientationModal");
+const btnOrientationOk       = document.getElementById("btnOrientationOk");
 
 // Botões de modo
 const btnPC     = document.getElementById("btnPC");
@@ -415,8 +446,16 @@ if (mobileRestartBtn) {
   });
 }
 
+// Botão OK do aviso de orientação
+if (btnOrientationOk) {
+  btnOrientationOk.addEventListener("click", (e) => {
+    e.preventDefault();
+    hideOrientationModal();
+  });
+}
+
 // ======================================================================
-// FUNÇÕES AUXILIARES DO BOTÃO REINICIAR MOBILE
+// FUNÇÕES AUXILIARES DO BOTÃO REINICIAR MOBILE E MODAL
 // ======================================================================
 function showMobileRestart() {
   if (GAME.mode === "mobile" && mobileRestartBtn) {
@@ -427,6 +466,18 @@ function showMobileRestart() {
 function hideMobileRestart() {
   if (mobileRestartBtn) {
     mobileRestartBtn.style.display = "none";
+  }
+}
+
+function showOrientationModal() {
+  if (mobileOrientationModal) {
+    mobileOrientationModal.classList.remove("hidden");
+  }
+}
+
+function hideOrientationModal() {
+  if (mobileOrientationModal) {
+    mobileOrientationModal.classList.add("hidden");
   }
 }
 
@@ -664,6 +715,11 @@ function takeDamage() {
     GAME.running = false;
     GAME.gameOver = true;
     showMobileRestart(); // aparece só no game over (mobile)
+
+    if (!bgMusic.paused) {
+      bgMusic.pause();
+      bgMusic.currentTime = 0;
+    }
   }
 }
 
@@ -747,12 +803,16 @@ function selectMode(mode) {
     canvas.width = 900;
     canvas.height = 450;
     mobileControlsEl.classList.remove("show");
+    hideOrientationModal();      // no PC não precisa do aviso
   } else {
-    // modo celular: mesma resolução, mas responsivo no CSS e com controles laterais
+    // modo celular
     canvas.width = 900;
     canvas.height = 450;
     mobileControlsEl.classList.add("show");
+    showOrientationModal();      // mostra o aviso com GIF
   }
+
+  playBackgroundMusic();  // inicia a trilha após clique no menu
 
   hideMobileRestart();  // sempre começa sem botão de restart
   resetGame();
@@ -791,6 +851,11 @@ function resetGame() {
   levelTextEl.textContent = "Nível: " + GAME.level;
   GAME.lastTime = 0;
   currentTimeMs = 0;
+
+  // Se a música já tiver sido iniciada antes, retoma ao reiniciar o jogo
+  if (musicStarted) {
+    resumeBackgroundMusic();
+  }
 }
 
 // Inicialização
